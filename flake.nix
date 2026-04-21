@@ -13,6 +13,7 @@
         vineflower = import ./pkgs/vineflower { pkgs = final; };
         # TODO: Maybe switch to an overlay? Once I figure out how
         fantasque-sans-mono = import ./pkgs/fantasque-sans-mono { pkgs = final; };
+        scrcpy-rofi = import ./pkgs/scrcpy-rofi { pkgs = final; };
       };
     in
     flake-utils.lib.eachDefaultSystem (system:
@@ -22,6 +23,7 @@
         packages.ffmpeg-helpers = pkgs.ffmpeg-helpers;
         packages.vineflower = pkgs.vineflower;
         packages.fantasque-sans-mono = pkgs.fantasque-sans-mono;
+        packages.scrcpy-rofi = pkgs.scrcpy-rofi;
       }
     )
     // {
