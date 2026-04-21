@@ -14,6 +14,7 @@
         # TODO: Maybe switch to an overlay? Once I figure out how
         fantasque-sans-mono = import ./pkgs/fantasque-sans-mono { pkgs = final; };
         scrcpy-rofi = import ./pkgs/scrcpy-rofi { pkgs = final; };
+        audio-notification = import ./pkgs/audio-notification { pkgs = final; };
       };
     in
     flake-utils.lib.eachDefaultSystem (system:
@@ -24,6 +25,7 @@
         packages.vineflower = pkgs.vineflower;
         packages.fantasque-sans-mono = pkgs.fantasque-sans-mono;
         packages.scrcpy-rofi = pkgs.scrcpy-rofi;
+        packages.audio-notification = pkgs.audio-notification;
       }
     )
     // {
