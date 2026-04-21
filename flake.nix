@@ -11,6 +11,8 @@
       overlay = final: prev: {
         ffmpeg-helpers = import ./pkgs/ffmpeg-helpers { pkgs = final; };
         vineflower = import ./pkgs/vineflower { pkgs = final; };
+        # TODO: Maybe switch to an overlay? Once I figure out how
+        fantasque-sans-mono = import ./pkgs/fantasque-sans-mono { pkgs = final; };
       };
     in
     flake-utils.lib.eachDefaultSystem (system:
@@ -19,6 +21,7 @@
       in {
         packages.ffmpeg-helpers = pkgs.ffmpeg-helpers;
         packages.vineflower = pkgs.vineflower;
+        packages.fantasque-sans-mono = pkgs.fantasque-sans-mono;
       }
     )
     // {
