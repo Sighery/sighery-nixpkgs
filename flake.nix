@@ -10,6 +10,7 @@
     let
       overlay = final: prev: {
         ffmpeg-helpers = import ./pkgs/ffmpeg-helpers { pkgs = final; };
+        vineflower = import ./pkgs/vineflower { pkgs = final; };
       };
     in
     flake-utils.lib.eachDefaultSystem (system:
@@ -17,6 +18,7 @@
         pkgs = import nixpkgs { inherit system; overlays = [ overlay ]; };
       in {
         packages.ffmpeg-helpers = pkgs.ffmpeg-helpers;
+        packages.vineflower = pkgs.vineflower;
       }
     )
     // {
