@@ -1,28 +1,27 @@
 { pkgs, ... }:
 
-let
+pkgs.stdenvNoCC.mkDerivation rec {
+  pname = "fantasque-sans-mono";
   version = "1.7.2";
-in
-pkgs.fetchurl rec {
-  name = "fantasque-sans-mono-${version}";
 
-  url = "https://github.com/belluzj/fantasque-sans/releases/download/v${version}/FantasqueSansMono-LargeLineHeight-NoLoopK.zip";
+  src = pkgs.fetchzip {
+    url = "https://github.com/belluzj/fantasque-sans/releases/download/v${version}/FantasqueSansMono-LargeLineHeight-NoLoopK.zip";
+    stripRoot = false;
+    hash = "sha256-/vfThWY+ig/5yeljEQNjpBIMQQQ84wZa0as+kUv4KXA=";
+  };
 
-  recursiveHash = true;
-  downloadToTemp = true;
-  nativeBuildInputs = [ pkgs.unzip ];
+  installPhase = ''
+    runHook preInstall
 
-  postFetch = ''
-    mkdir -p $out/share/{doc,fonts}
-    unzip -j $downloadedFile \*.otf    -d $out/share/fonts/opentype
-    unzip -j $downloadedFile README.md -d $out/share/doc/${name}
+    install -Dm644 OTF/*.otf -t $out/share/fonts/opentype
+    install -Dm644 README.md -t $out/share/doc/${pname}-${version}
+
+    runHook postInstall
   '';
-
-  sha256 = "1myp4gdxx91jn29vw90z4yiwyahzj5qh29pjlmkknzpdycdb08b5";
 
   meta = with pkgs.lib; {
     homepage = "https://github.com/belluzj/fantasque-sans";
-    description = "A font family with a great monospaced variant for programmers";
+    description = "Font family with a great monospaced variant for programmers";
     license = licenses.ofl;
     platforms = platforms.all;
     maintainers = [ maintainers.rycee ];

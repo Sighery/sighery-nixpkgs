@@ -34,6 +34,13 @@
               rm $out/share/spotify/Apps/xpui-snapshot.js
             '';
         });
+
+        # fantasque-sans-mono = prev.fantasque-sans-mono.overrideAttrs(old: {
+        #   version = "1.7.2";
+        #   src = prev.fetchzip {
+
+        #   };
+        # });
       };
     in
     flake-utils.lib.eachDefaultSystem (system:
