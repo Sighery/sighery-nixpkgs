@@ -15,6 +15,7 @@
         vineflower = import ./pkgs/vineflower { pkgs = final; };
         scrcpy-rofi = import ./pkgs/scrcpy-rofi { pkgs = final; };
         audio-notification = import ./pkgs/audio-notification { pkgs = final; };
+        kitty-grab = import ./pkgs/kitty-grab { pkgs = final; };
 
         spotify = prev.spotify.overrideAttrs (old: {
           buildInputs = (old.buildInputs or [ ]) ++ [prev.zip prev.unzip];
@@ -52,6 +53,7 @@
         packages.vineflower = pkgs.vineflower;
         packages.scrcpy-rofi = pkgs.scrcpy-rofi;
         packages.audio-notification = pkgs.audio-notification;
+        packages.kitty-grab = pkgs.kitty-grab;
       }
     )
     // {
