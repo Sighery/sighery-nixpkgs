@@ -6,16 +6,24 @@ pkgs.stdenv.mkDerivation {
 
   src = ./.;
 
-  propagatedBuildInputs = with pkgs; [
-    bash
-    rofi
-    scrcpy
-  ];
+  nativeBuildInputs = [ pkgs.makeWrapper ];
 
   installPhase = ''
+    runHook preInstall
+
     mkdir -p $out/bin
     cp scrcpy-rofi.sh $out/bin/scrcpy-rofi
     chmod +x $out/bin/scrcpy-rofi
+
+    runHook postInstall
+  '';
+
+  postFixup = ''
+    wrapProgram $out/bin/scrcpy-rofi \
+      --set PATH ${pkgs.lib.makeBinPath (with pkgs; [
+        rofi
+        scrcpy
+      ])}
   '';
 
   meta = with pkgs.lib; {

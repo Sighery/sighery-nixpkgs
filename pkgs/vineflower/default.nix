@@ -15,12 +15,16 @@ pkgs.stdenv.mkDerivation rec {
   dontUnpack = true;
 
   installPhase = ''
+    runHook preInstall
+
     mkdir -p $out/share/java
     cp $src $out/share/java/vineflower.jar
 
     mkdir -p $out/bin
     makeWrapper ${pkgs.jre_headless}/bin/java $out/bin/vineflower \
       --add-flags "-jar $out/share/java/vineflower.jar"
+
+    runHook postInstall
   '';
 
   meta = with pkgs.lib; {

@@ -21,14 +21,22 @@ pkgs.rustPlatform.buildRustPackage {
   '';
 
   buildPhase = ''
+    runHook preBuild
+
     make
+
+    runHook postBuild
   '';
 
   installPhase = ''
+    runHook preInstall
+
     mkdir -p $out/etc/spotify-adblock
     install -D --mode=644 config.toml $out/etc/spotify-adblock
     mkdir -p $out/lib
     install -D --mode=644 --strip target/release/libspotifyadblock.so $out/lib
+
+    runHook postInstall
   '';
 
   meta = with pkgs.lib; {
