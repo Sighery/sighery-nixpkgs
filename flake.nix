@@ -13,8 +13,6 @@
       in {
         ffmpeg-helpers = import ./pkgs/ffmpeg-helpers { pkgs = final; };
         vineflower = import ./pkgs/vineflower { pkgs = final; };
-        # TODO: Maybe switch to an overlay? Once I figure out how
-        fantasque-sans-mono = import ./pkgs/fantasque-sans-mono { pkgs = final; };
         scrcpy-rofi = import ./pkgs/scrcpy-rofi { pkgs = final; };
         audio-notification = import ./pkgs/audio-notification { pkgs = final; };
 
@@ -35,12 +33,15 @@
             '';
         });
 
-        # fantasque-sans-mono = prev.fantasque-sans-mono.overrideAttrs(old: {
-        #   version = "1.7.2";
-        #   src = prev.fetchzip {
+        fantasque-sans-mono = prev.fantasque-sans-mono.overrideAttrs(old: {
+          version = "1.7.2";
 
-        #   };
-        # });
+          src = prev.fetchzip {
+            url = "https://github.com/belluzj/fantasque-sans/releases/download/v1.7.2/FantasqueSansMono-LargeLineHeight-NoLoopK.zip";
+            stripRoot = false;
+            hash = "sha256-/vfThWY+ig/5yeljEQNjpBIMQQQ84wZa0as+kUv4KXA=";
+          };
+        });
       };
     in
     flake-utils.lib.eachDefaultSystem (system:
@@ -49,7 +50,6 @@
       in {
         packages.ffmpeg-helpers = pkgs.ffmpeg-helpers;
         packages.vineflower = pkgs.vineflower;
-        packages.fantasque-sans-mono = pkgs.fantasque-sans-mono;
         packages.scrcpy-rofi = pkgs.scrcpy-rofi;
         packages.audio-notification = pkgs.audio-notification;
       }
