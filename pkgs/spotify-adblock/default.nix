@@ -44,5 +44,8 @@ pkgs.rustPlatform.buildRustPackage {
     description = "Adblocker for Spotify";
     license = licenses.gpl3;
     platforms = platforms.linux;
+
+    # Custom attr to exclude from the flake overlay
+    excludeFromOverlay = true;
   };
 }
