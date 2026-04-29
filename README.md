@@ -41,6 +41,7 @@ nix-repl> builtins.attrNames (overlays.default pkgs pkgs)
   "audio-notification"
   "fantasque-sans-mono"
   "ffmpeg-helpers"
+  "hermes"
   "kitty-grab"
   "scrcpy-rofi"
   "spotify"
