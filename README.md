@@ -46,6 +46,7 @@ nix-repl> builtins.attrNames (overlays.default pkgs pkgs)
   "scrcpy-rofi"
   "spotify"
   "vineflower"
+  "xclipboard"
 ]
 ```
 
