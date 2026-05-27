@@ -31,5 +31,9 @@
       packages.${system} = customPkgs;
 
       overlays.default = customOverlay;
+
+      nixosModules = {
+        goaccess = import ./modules/goaccess.nix;
+      };
     };
 }
