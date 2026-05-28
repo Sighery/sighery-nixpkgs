@@ -61,7 +61,7 @@ in
     };
 
     logFileFormat = lib.mkOption {
-      type = types.enum [
+      type = types.nullOr (types.enum [
         "COMBINED"
         "VCOMBINED"
         "COMMON"
@@ -75,8 +75,27 @@ in
         "AWSALB"
         "CADDY"
         "TRAEFIKCLF"
-      ];
+      ]);
+      default = null;
       description = "The format of the log file to analyze.";
+    };
+
+    logFormatCustom = lib.mkOption {
+      type = types.nullOr types.nonEmptyStr;
+      default = null;
+      description = ''
+        Custom log format.
+        You can check existing log formats here: <https://github.com/allinurl/goaccess/blob/4de199e9ebd8fdc14441b571fdb15d5ff980388b/src/settings.c#L69-L91>
+      '';
+    };
+
+    extraFlags = lib.mkOption {
+      type = types.attrsOf types.str;
+      default = {};
+      description = ''
+        Custom extra configuration when executing goaccess.
+        You can check config options here: <https://github.com/allinurl/goaccess/blob/master/config/goaccess.conf>
+      '';
     };
 
     reportTitle = lib.mkOption {
@@ -119,6 +138,10 @@ in
         assertion = cfg.serverPath == "" || lib.strings.hasSuffix "/" cfg.serverPath;
         message = "The serverPath option is neither an empty string, nor ends with '/'.";
       }
+      {
+        assertion = cfg.logFileFormat == null || cfg.logFormatCustom == null;
+        message = "Either logFileFormat or logFormatCustom must be set.";
+      }
     ];
 
     users.users.${userName} = {
@@ -152,13 +175,29 @@ in
         Group = userName;
         WorkingDirectory = cfg.dataDir;
         Type = "simple";
-        ExecStart = ''
-          ${cfg.package}/bin/goaccess --log-file=${cfg.logFilePath} --log-format=${cfg.logFileFormat} \
-            --anonymize-ip --persist --restore --db-path=${cfg.dataDir} --keep-last=${toString cfg.dataRetentionDays} \
-            --all-static-files --real-time-html \
-            ${if cfg.reportTitle != null then "--html-report-title=\"${cfg.reportTitle}\"" else ""} \
-            --output=${cfg.reportDir}/index.html --addr=127.0.0.1 --port=${toString cfg.port} \
-            --ws-url=wss://${cfg.serverHost}:443/${cfg.serverPath}ws --origin=https://${cfg.serverHost}'';
+
+        ExecStart =
+          let
+            keys = builtins.attrNames cfg.extraFlags;
+            fragments = map (k:
+              let v = cfg.extraFlags.${k}; in
+              "--${k}='${v}'"
+            ) keys;
+            flagsString = builtins.concatStringsSep " " fragments;
+            script = ''
+              ${cfg.package}/bin/goaccess --log-file=${cfg.logFilePath} \
+                --log-format='${if cfg.logFileFormat != null then cfg.logFileFormat else cfg.logFormatCustom}' \
+                --anonymize-ip --persist --restore --db-path=${cfg.dataDir} \
+                --keep-last=${toString cfg.dataRetentionDays} \
+                --all-static-files --real-time-html \
+                ${if cfg.reportTitle != null then "--html-report-title\"${cfg.reportTitle}\"" else ""} \
+                --output=${cfg.reportDir}/index.html --addr=127.0.0.1 \
+                --port=${toString cfg.port} \
+                --ws-url=wss://${cfg.serverHost}:443/${cfg.serverPath}ws \
+                --origin=https://${cfg.serverHost} \
+                ${flagsString}
+            '';
+          in "${pkgs.writeShellScript "goaccess-run" script}";
 
         AmbientCapabilities = [ ];
         CapabilityBoundingSet = [
