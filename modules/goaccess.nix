@@ -89,6 +89,12 @@ in
       '';
     };
 
+    geoipDbPaths = lib.mkOption {
+      type = types.listOf types.path;
+      default = [];
+      description = "List of GeoIP databases to use in Goaccess.";
+    };
+
     extraFlags = lib.mkOption {
       type = types.attrsOf types.str;
       default = {};
@@ -184,6 +190,10 @@ in
               "--${k}='${v}'"
             ) keys;
             flagsString = builtins.concatStringsSep " " fragments;
+
+            geoipFragments = map(v: "--geoip-database=${v}") cfg.geoipDbPaths;
+            geoipFlags = builtins.concatStringsSep " " geoipFragments;
+
             script = ''
               ${cfg.package}/bin/goaccess --log-file=${cfg.logFilePath} \
                 --log-format='${if cfg.logFileFormat != null then cfg.logFileFormat else cfg.logFormatCustom}' \
@@ -195,6 +205,7 @@ in
                 --port=${toString cfg.port} \
                 --ws-url=wss://${cfg.serverHost}:443/${cfg.serverPath}ws \
                 --origin=https://${cfg.serverHost} \
+                ${geoipFlags} \
                 ${flagsString}
             '';
           in "${pkgs.writeShellScript "goaccess-run" script}";
