@@ -34,6 +34,7 @@
 
       nixosModules = {
         goaccess = import ./modules/goaccess.nix;
+        syncthing-relay = import ./modules/syncthing-relay.nix;
       };
     };
 }
