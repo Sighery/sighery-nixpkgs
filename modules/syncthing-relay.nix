@@ -15,9 +15,10 @@ let
   relayOptions = [
     "--keys=${dataDirectory}"
     "--listen=${cfg.listenAddress}:${toString cfg.port}"
-    "--status-srv=${cfg.statusListenAddress}:${toString cfg.statusPort}"
     "--provided-by=${escapeShellArg cfg.providedBy}"
   ]
+  ++ optional (cfg.enableStatusSrv == true) "--status-srv=${cfg.statusListenAddress}:${toString cfg.statusPort}"
+  ++ optional (cfg.enableStatusSrv == false) "--status-srv="
   ++ optional (cfg.pools != null) "--pools=${escapeShellArg (concatStringsSep "," cfg.pools)}"
   ++ optional (cfg.globalRateBps != null) "--global-rate=${toString cfg.globalRateBps}"
   ++ optional (cfg.perSessionRateBps != null) "--per-session-rate=${toString cfg.perSessionRateBps}"
@@ -85,6 +86,15 @@ in
       description = ''
         Port to listen on for serving the relay status API. This port should be
         added to `networking.firewall.allowedTCPPorts`.
+      '';
+    };
+
+    enableStatusSrv = mkOption {
+      type = types.bool;
+      default = true;
+      description = ''
+        Whether the relay status API is enabled. When using a private relay,
+        this might be unnecessary.
       '';
     };
 
