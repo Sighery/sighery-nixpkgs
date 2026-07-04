@@ -14,6 +14,7 @@ let
     scrcpy-rofi = callPackage ./scrcpy-rofi { };
     spotify-adblock = callPackage ./spotify-adblock { };
     vineflower = callPackage ./vineflower { };
+    vscode-antislop-settings = callPackage ./vscode-antislop-settings { };
     xclipboard = callPackage ./xclipboard { };
   };
 in

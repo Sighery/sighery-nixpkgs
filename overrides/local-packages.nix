@@ -13,5 +13,6 @@ in
   openirl-srtla = callPackage ../pkgs/openirl-srtla { };
   scrcpy-rofi = callPackage ../pkgs/scrcpy-rofi { };
   vineflower = callPackage ../pkgs/vineflower { };
+  vscode-antislop-settings = callPackage ../pkgs/vscode-antislop-settings { };
   xclipboard = callPackage ../pkgs/xclipboard { };
 }
