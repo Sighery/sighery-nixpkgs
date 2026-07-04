@@ -11,7 +11,7 @@
 
       pkgsBase = import nixpkgs {
         inherit system;
-        overlays = [];
+        overlays = [ ];
       };
 
       customPkgs = import ./pkgs pkgsBase;
@@ -27,7 +27,11 @@
         inherit system;
         overlays = [ customOverlay ];
       };
-    in {
+
+    in
+    {
+      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
+
       packages.${system} = customPkgs;
 
       overlays.default = customOverlay;
