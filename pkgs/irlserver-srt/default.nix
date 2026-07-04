@@ -2,13 +2,13 @@
 
 stdenv.mkDerivation {
   pname = "irlserver-srt";
-  version = "v1.5.4-irl2";
+  version = "f229719";
 
   src = fetchFromGitHub {
     owner = "irlserver";
     repo = "srt";
-    rev = "refs/tags/v1.5.4-irl2";
-    hash = "sha256-0OqNF7ix4AzWyxlChJQ6IXRuR98rLynnlml7ojG3O3A=";
+    rev = "f2297192ce9ab572464e84228efbc46f8c1eabf4";
+    hash = "sha256-1X5bpdgb9VL8/JgdCRQtVyrR+SwO7vtM/MnMxl+GIjY=";
   };
 
   nativeBuildInputs = [

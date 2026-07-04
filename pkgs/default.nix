@@ -6,6 +6,7 @@ let
     audio-notification = callPackage ./audio-notification { };
     ffmpeg-helpers = callPackage ./ffmpeg-helpers { };
     hermes = callPackage ./hermes { };
+    irlserver-irl-srt-server = callPackage ./irlserver-irl-srt-server { };
     irlserver-srt = callPackage ./irlserver-srt { };
     irlserver-srtla = callPackage ./irlserver-srtla { };
     kitty-grab = callPackage ./kitty-grab { };

@@ -6,6 +6,7 @@ in
   audio-notification = callPackage ../pkgs/audio-notification { };
   ffmpeg-helpers = callPackage ../pkgs/ffmpeg-helpers { };
   hermes = callPackage ../pkgs/hermes { };
+  irlserver-irl-srt-server = callPackage ../pkgs/irlserver-irl-srt-server { };
   irlserver-srt = callPackage ../pkgs/irlserver-srt { };
   irlserver-srtla = callPackage ../pkgs/irlserver-srtla { };
   kitty-grab = callPackage ../pkgs/kitty-grab { };
