@@ -29,8 +29,8 @@ stdenv.mkDerivation {
     runHook preInstall
 
     mkdir -p $out/bin
-    install -m 755 srtla_rec $out/bin/irlserver-srtla_rec
-    install -m 755 srtla_send $out/bin/irlserver-srtla_send
+    install -m 755 srtla_rec $out/bin/srtla_rec
+    install -m 755 srtla_send $out/bin/srtla_send
 
     runHook postInstall
   '';

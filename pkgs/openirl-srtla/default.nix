@@ -25,7 +25,7 @@ stdenv.mkDerivation {
     runHook preInstall
 
     mkdir -p $out/bin
-    install -m 755 srtla_rec $out/bin/openirl-srtla_rec
+    install -m 755 srtla_rec $out/bin/srtla_rec
 
     runHook postInstall
   '';
