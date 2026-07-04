@@ -1,22 +1,22 @@
-{ pkgs, ... }:
+{ stdenv, fetchFromGitHub, cmake, python3, spdlog, argparse, lib, ... }:
 
-pkgs.stdenv.mkDerivation {
+stdenv.mkDerivation {
   pname = "irlserver-srtla";
   version = "39e324a";
 
-  src = pkgs.fetchFromGitHub {
+  src = fetchFromGitHub {
     owner = "irlserver";
     repo = "srtla";
     rev = "39e324a9420763720b9f16c463971ababa757bc1";
     hash = "sha256-pb3SrhqzHoLdovjR802pf33jFgpYvybN9NsBfh3rQZk=";
   };
 
-  nativeBuildInputs = with pkgs; [
+  nativeBuildInputs = [
     cmake
     python3
   ];
 
-  buildInputs = with pkgs; [
+  buildInputs = [
     spdlog
     argparse
   ];
@@ -35,7 +35,7 @@ pkgs.stdenv.mkDerivation {
     runHook postInstall
   '';
 
-  meta = with pkgs.lib; {
+  meta = with lib; {
     homepage = "https://github.com/irlserver/srtla";
     description = "SRT transport proxy with link aggregation for connection bonding";
     license = licenses.agpl3Plus;

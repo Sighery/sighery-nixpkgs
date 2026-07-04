@@ -1,12 +1,12 @@
-{ pkgs, ... }:
+{ stdenv, makeWrapper, lib, xclip, coreutils, ... }:
 
-pkgs.stdenv.mkDerivation {
+stdenv.mkDerivation {
   pname = "xclipboard";
   version = "0.3.0";
 
   src = ./.;
 
-  nativeBuildInputs = [ pkgs.makeWrapper ];
+  nativeBuildInputs = [ makeWrapper ];
 
   installPhase = ''
     runHook preInstall
@@ -20,13 +20,13 @@ pkgs.stdenv.mkDerivation {
 
   postFixup = ''
     wrapProgram $out/bin/xclipboard \
-      --set PATH ${pkgs.lib.makeBinPath (with pkgs; [
+      --set PATH ${lib.makeBinPath ([
         xclip
         coreutils
       ])}
   '';
 
-  meta = with pkgs.lib; {
+  meta = with lib; {
     homepage = "https://github.com/Sighery/sighery-nixpkgs";
     description = "Helper script to copy files to clipboard from CLI.";
     license = licenses.mit;

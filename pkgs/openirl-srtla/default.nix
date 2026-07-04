@@ -1,22 +1,22 @@
-{ pkgs, ... }:
+{ stdenv, fetchFromGitHub, cmake, python3, spdlog, argparse, lib, ... }:
 
-pkgs.stdenv.mkDerivation {
+stdenv.mkDerivation {
   pname = "openirl-srtla";
   version = "1.0.0";
 
-  src = pkgs.fetchFromGitHub {
+  src = fetchFromGitHub {
     owner = "OpenIRL";
     repo = "srtla";
     rev = "refs/tags/1.0.0";
     hash = "sha256-Q6gi046dAsjK2AklAsXrYAkDJiqnhYouZuCDnKZijmw=";
   };
 
-  nativeBuildInputs = with pkgs; [
+  nativeBuildInputs = [
     cmake
     python3
   ];
 
-  buildInputs = with pkgs; [
+  buildInputs = [
     spdlog
     argparse
   ];
@@ -30,7 +30,7 @@ pkgs.stdenv.mkDerivation {
     runHook postInstall
   '';
 
-  meta = with pkgs.lib; {
+  meta = with lib; {
     homepage = "https://github.com/OpenIRL/srtla";
     description = "SRT transport proxy with link aggregation for connection bonding";
     license = licenses.agpl3Plus;

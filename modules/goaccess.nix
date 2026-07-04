@@ -91,13 +91,13 @@ in
 
     geoipDbPaths = lib.mkOption {
       type = types.listOf types.path;
-      default = [];
+      default = [ ];
       description = "List of GeoIP databases to use in Goaccess.";
     };
 
     extraFlags = lib.mkOption {
       type = types.attrsOf types.str;
-      default = {};
+      default = { };
       description = ''
         Custom extra configuration when executing goaccess.
         You can check config options here: <https://github.com/allinurl/goaccess/blob/master/config/goaccess.conf>
@@ -185,13 +185,15 @@ in
         ExecStart =
           let
             keys = builtins.attrNames cfg.extraFlags;
-            fragments = map (k:
-              let v = cfg.extraFlags.${k}; in
-              "--${k}='${v}'"
-            ) keys;
+            fragments = map
+              (k:
+                let v = cfg.extraFlags.${k}; in
+                "--${k}='${v}'"
+              )
+              keys;
             flagsString = builtins.concatStringsSep " " fragments;
 
-            geoipFragments = map(v: "--geoip-database=${v}") cfg.geoipDbPaths;
+            geoipFragments = map (v: "--geoip-database=${v}") cfg.geoipDbPaths;
             geoipFlags = builtins.concatStringsSep " " geoipFragments;
 
             script = ''
@@ -208,7 +210,8 @@ in
                 ${geoipFlags} \
                 ${flagsString}
             '';
-          in "${pkgs.writeShellScript "goaccess-run" script}";
+          in
+          "${pkgs.writeShellScript "goaccess-run" script}";
 
         AmbientCapabilities = [ ];
         CapabilityBoundingSet = [

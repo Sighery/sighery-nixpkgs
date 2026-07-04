@@ -9,32 +9,31 @@
     let
       system = "x86_64-linux";
 
-      pkgsBase = import nixpkgs {
-        inherit system;
-        overlays = [ ];
-      };
+      localPkgsOverlay = import ./overrides/local-packages.nix;
+      fantasqueOverlay = import ./overrides/fantasque-sans-mono;
+      spotifyOverlay = import ./overrides/spotify;
 
-      customPkgs = import ./pkgs pkgsBase;
+      overlays = [
+        localPkgsOverlay
+        fantasqueOverlay
+        spotifyOverlay
+      ];
 
-      pkgsBaseWithCustom = pkgsBase.extend (final: prev: customPkgs);
-
-      customOverlay = import ./overrides {
-        pkgsBase = pkgsBaseWithCustom;
-        customPkgs = customPkgs;
-      };
+      composedOverlay = nixpkgs.lib.composeManyExtensions overlays;
 
       pkgs = import nixpkgs {
         inherit system;
-        overlays = [ customOverlay ];
+        overlays = overlays;
       };
 
+      customPkgs = import ./pkgs { inherit pkgs; };
     in
     {
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
 
       packages.${system} = customPkgs;
 
-      overlays.default = customOverlay;
+      overlays.default = composedOverlay;
 
       nixosModules = {
         goaccess = import ./modules/goaccess.nix;

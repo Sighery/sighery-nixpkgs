@@ -1,21 +1,21 @@
-{ pkgs, ... }:
+{ stdenv, fetchFromGitHub, cmake, openssl, lib, ... }:
 
-pkgs.stdenv.mkDerivation {
+stdenv.mkDerivation {
   pname = "irlserver-srt";
   version = "v1.5.4+openirl.1";
 
-  src = pkgs.fetchFromGitHub {
+  src = fetchFromGitHub {
     owner = "OpenIRL";
     repo = "srt";
     rev = "refs/tags/v1.5.4+openirl.1";
     hash = "sha256-geHIFEAUGKrU2R4I8QAL/3BzJncrgglYQKe3boKWagI=";
   };
 
-  nativeBuildInputs = with pkgs; [
+  nativeBuildInputs = [
     cmake
   ];
 
-  buildInputs = with pkgs; [
+  buildInputs = [
     openssl
   ];
 
@@ -28,7 +28,7 @@ pkgs.stdenv.mkDerivation {
     "-DENABLE_BONDING=ON"
   ];
 
-  meta = with pkgs.lib; {
+  meta = with lib; {
     homepage = "https://github.com/OpenIRL/srt";
     description = "Secure, Reliable, Transport";
     license = licenses.mpl20;

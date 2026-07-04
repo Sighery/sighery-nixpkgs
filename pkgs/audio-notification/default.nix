@@ -1,12 +1,12 @@
-{ pkgs, ... }:
+{ stdenv, makeWrapper, lib, wireplumber, bc, gawk, coreutils, gnused, libnotify, ... }:
 
-pkgs.stdenv.mkDerivation {
+stdenv.mkDerivation {
   pname = "audio-notification";
   version = "0.1.0";
 
   src = ./.;
 
-  nativeBuildInputs = [ pkgs.makeWrapper ];
+  nativeBuildInputs = [ makeWrapper ];
 
   installPhase = ''
     runHook preInstall
@@ -20,7 +20,7 @@ pkgs.stdenv.mkDerivation {
 
   postFixup = ''
     wrapProgram $out/bin/audio-notification \
-      --set PATH ${pkgs.lib.makeBinPath (with pkgs; [
+      --set PATH ${lib.makeBinPath ([
         wireplumber
         bc
         gawk
@@ -30,7 +30,7 @@ pkgs.stdenv.mkDerivation {
       ])}
   '';
 
-  meta = with pkgs.lib; {
+  meta = with lib; {
     homepage = "https://github.com/Sighery/sighery-nixpkgs";
     description = "Small helper script to display current volume and mute status on the default audio sink.";
     license = licenses.mit;

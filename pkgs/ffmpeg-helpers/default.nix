@@ -1,12 +1,12 @@
-{ pkgs, ... }:
+{ stdenv, makeWrapper, lib, ffmpeg, coreutils, ... }:
 
-pkgs.stdenv.mkDerivation {
+stdenv.mkDerivation {
   pname = "ffmpeg-helpers";
   version = "0.1.0";
 
   src = ./.;
 
-  nativeBuildInputs = [ pkgs.makeWrapper ];
+  nativeBuildInputs = [ makeWrapper ];
 
   installPhase = ''
     runHook preInstall
@@ -20,13 +20,13 @@ pkgs.stdenv.mkDerivation {
 
   postFixup = ''
     wrapProgram $out/bin/fftomp4 \
-      --set PATH ${pkgs.lib.makeBinPath (with pkgs; [
+      --set PATH ${lib.makeBinPath ([
         ffmpeg
         coreutils
       ])}
   '';
 
-  meta = with pkgs.lib; {
+  meta = with lib; {
     homepage = "https://github.com/Sighery/sighery-nixpkgs";
     description = "Series of ffmpeg helper scripts for things I need to do often.";
     license = licenses.mit;

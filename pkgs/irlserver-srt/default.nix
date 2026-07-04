@@ -1,21 +1,21 @@
-{ pkgs, ... }:
+{ stdenv, fetchFromGitHub, cmake, openssl, lib, ... }:
 
-pkgs.stdenv.mkDerivation {
+stdenv.mkDerivation {
   pname = "irlserver-srt";
   version = "v1.5.4-irl2";
 
-  src = pkgs.fetchFromGitHub {
+  src = fetchFromGitHub {
     owner = "irlserver";
     repo = "srt";
     rev = "refs/tags/v1.5.4-irl2";
     hash = "sha256-0OqNF7ix4AzWyxlChJQ6IXRuR98rLynnlml7ojG3O3A=";
   };
 
-  nativeBuildInputs = with pkgs; [
+  nativeBuildInputs = [
     cmake
   ];
 
-  buildInputs = with pkgs; [
+  buildInputs = [
     openssl
   ];
 
@@ -28,7 +28,7 @@ pkgs.stdenv.mkDerivation {
     "-DENABLE_BONDING=ON"
   ];
 
-  meta = with pkgs.lib; {
+  meta = with lib; {
     homepage = "https://github.com/irlserver/srt";
     description = "Up-to-date fork of the srt shared library with BELABOX changes";
     license = licenses.mpl20;

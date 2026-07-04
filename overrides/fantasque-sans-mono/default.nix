@@ -1,6 +1,8 @@
-{ pkgsBase, ... }:
-
-final: prev: {
+final: prev:
+let
+  call = final.lib.callPackage (final // prev);
+in
+{
   fantasque-sans-mono = prev.fantasque-sans-mono.overrideAttrs (old: {
     version = "1.7.2";
 

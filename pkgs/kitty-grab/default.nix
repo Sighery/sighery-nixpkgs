@@ -1,10 +1,10 @@
-{ pkgs, ... }:
+{ stdenv, fetchFromGitHub, lib, ... }:
 
-pkgs.stdenv.mkDerivation {
+stdenv.mkDerivation {
   pname = "kitty-grab";
   version = "unstable-2025-09-29";
 
-  src = pkgs.fetchFromGitHub {
+  src = fetchFromGitHub {
     owner = "yurikhan";
     repo = "kitty_grab";
     rev = "969e363295b48f62fdcbf29987c77ac222109c41";
@@ -23,7 +23,7 @@ pkgs.stdenv.mkDerivation {
     runHook postInstall
   '';
 
-  meta = with pkgs.lib; {
+  meta = with lib; {
     description = "Keyboard-driven screen grabber for Kitty";
     homepage = "https://github.com/yurikhan/kitty_grab";
     license = licenses.gpl3;

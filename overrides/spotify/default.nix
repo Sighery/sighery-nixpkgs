@@ -1,16 +1,19 @@
-{ pkgsBase, ... }:
-
-final: prev: {
+final: prev:
+let
+  callPackage = final.lib.callPackageWith (final // prev);
+  spotify-adblock = callPackage ../../pkgs/spotify-adblock { };
+in
+{
   spotify = prev.spotify.overrideAttrs (old: {
-    buildInputs = (old.buildInputs or []) ++ [ prev.zip prev.unzip ];
+    buildInputs = (old.buildInputs or [ ]) ++ [ prev.zip prev.unzip ];
 
     postInstall =
       (old.postInstall or "")
       + ''
-        ln -s ${pkgsBase.spotify-adblock}/lib/libspotifyadblock.so $libdir
+        ln -s ${spotify-adblock}/lib/libspotifyadblock.so $libdir
         sed -i "s:^Name=Spotify.*:Name=Spotify-adblock:" "$out/share/spotify/spotify.desktop"
         wrapProgram $out/bin/spotify \
-          --set LD_PRELOAD "${pkgsBase.spotify-adblock}/lib/libspotifyadblock.so"
+          --set LD_PRELOAD "${spotify-adblock}/lib/libspotifyadblock.so"
 
         # Hide placeholder for advert banner
         ${prev.unzip}/bin/unzip -p $out/share/spotify/Apps/xpui.spa xpui-snapshot.js | sed 's/adsEnabled:\!0/adsEnabled:false/' > $out/share/spotify/Apps/xpui-snapshot.js

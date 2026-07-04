@@ -1,12 +1,12 @@
-{ pkgs, ... }:
+{ stdenv, makeWrapper, lib, rofi, scrcpy, ... }:
 
-pkgs.stdenv.mkDerivation {
+stdenv.mkDerivation {
   pname = "scrcpy-rofi";
   version = "0.1.0";
 
   src = ./.;
 
-  nativeBuildInputs = [ pkgs.makeWrapper ];
+  nativeBuildInputs = [ makeWrapper ];
 
   installPhase = ''
     runHook preInstall
@@ -20,13 +20,13 @@ pkgs.stdenv.mkDerivation {
 
   postFixup = ''
     wrapProgram $out/bin/scrcpy-rofi \
-      --set PATH ${pkgs.lib.makeBinPath (with pkgs; [
+      --set PATH ${lib.makeBinPath ([
         rofi
         scrcpy
       ])}
   '';
 
-  meta = with pkgs.lib; {
+  meta = with lib; {
     homepage = "https://github.com/Sighery/sighery-nixpkgs";
     description = "A Rofi-based manager for scrcpy";
     license = licenses.mit;

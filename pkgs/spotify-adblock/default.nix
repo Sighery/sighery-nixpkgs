@@ -1,11 +1,11 @@
 # Taken from https://github.com/NL-TCH/nur-packages/blob/bcba7e4cf0f28a60630df8e2b56dc37b94e06d2b/pkgs/spotify-adblock/default.nix
-{ pkgs, ... }:
+{ rustPlatform, fetchFromGitHub, lib, ... }:
 
-pkgs.rustPlatform.buildRustPackage {
+rustPlatform.buildRustPackage {
   pname = "spotify-adblock";
   version = "lastcommit 2026-06-07";
 
-  src = pkgs.fetchFromGitHub {
+  src = fetchFromGitHub {
     owner = "abba23";
     repo = "spotify-adblock";
     rev = "9aeadd3cfd4d50212059720c09f662f149942fec";
@@ -39,7 +39,7 @@ pkgs.rustPlatform.buildRustPackage {
     runHook postInstall
   '';
 
-  meta = with pkgs.lib; {
+  meta = with lib; {
     homepage = "https://github.com/abba23/spotify-adblock";
     description = "Adblocker for Spotify";
     license = licenses.gpl3;

@@ -1,14 +1,20 @@
-pkgs:
+{ pkgs }:
 
 let
-  dir = ./.;
-  entries = builtins.readDir dir;
-
-  packageDirs = pkgs.lib.filterAttrs (name: type:
-    type == "directory"
-    && builtins.pathExists (dir + "/${name}/default.nix")
-  ) entries;
+  callPackage = pkgs.lib.callPackageWith (pkgs // packages);
+  packages = {
+    audio-notification = callPackage ./audio-notification { };
+    ffmpeg-helpers = callPackage ./ffmpeg-helpers { };
+    hermes = callPackage ./hermes { };
+    irlserver-srt = callPackage ./irlserver-srt { };
+    irlserver-srtla = callPackage ./irlserver-srtla { };
+    kitty-grab = callPackage ./kitty-grab { };
+    openirl-srt = callPackage ./openirl-srt { };
+    openirl-srtla = callPackage ./openirl-srtla { };
+    scrcpy-rofi = callPackage ./scrcpy-rofi { };
+    spotify-adblock = callPackage ./spotify-adblock { };
+    vineflower = callPackage ./vineflower { };
+    xclipboard = callPackage ./xclipboard { };
+  };
 in
-  pkgs.lib.mapAttrs (name: _:
-    import (dir + "/${name}") pkgs
-  ) packageDirs
+packages
