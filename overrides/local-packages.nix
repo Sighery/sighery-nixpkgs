@@ -10,6 +10,7 @@ in
   irlserver-srtla = callPackage ../pkgs/irlserver-srtla { };
   kitty-grab = callPackage ../pkgs/kitty-grab { };
   openirl-srt = callPackage ../pkgs/openirl-srt { };
+  openirl-srt-live-server = callPackage ./openirl-srt-live-server { };
   openirl-srtla = callPackage ../pkgs/openirl-srtla { };
   scrcpy-rofi = callPackage ../pkgs/scrcpy-rofi { };
   vineflower = callPackage ../pkgs/vineflower { };

@@ -10,6 +10,7 @@ let
     irlserver-srtla = callPackage ./irlserver-srtla { };
     kitty-grab = callPackage ./kitty-grab { };
     openirl-srt = callPackage ./openirl-srt { };
+    openirl-srt-live-server = callPackage ./openirl-srt-live-server { };
     openirl-srtla = callPackage ./openirl-srtla { };
     scrcpy-rofi = callPackage ./scrcpy-rofi { };
     spotify-adblock = callPackage ./spotify-adblock { };
