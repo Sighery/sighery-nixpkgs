@@ -1,7 +1,7 @@
 { stdenv, fetchFromGitHub, cmake, openssl, lib, ... }:
 
 stdenv.mkDerivation {
-  pname = "irlserver-srt";
+  pname = "openirl-srt";
   version = "v1.5.4+openirl.1";
 
   src = fetchFromGitHub {
@@ -21,11 +21,12 @@ stdenv.mkDerivation {
 
   cmakeFlags = [
     "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
-    "-DENABLE_STDCXX_SYNC=ON"
+    "-DCMAKE_BUILD_TYPE=Release"
+    "-DENABLE_SHARED=ON"
+
+    # https://github.com/nh2/nixpkgs/blob/f7b53c0f6a42aa1aaa23628fd44891ad4102f9df/pkgs/development/libraries/srt/default.nix#L20-L29
     "-DCMAKE_INSTALL_INCLUDEDIR=include"
     "-UCMAKE_INSTALL_LIBDIR"
-    "-DENABLE_ENCRYPTION=ON"
-    "-DENABLE_BONDING=ON"
   ];
 
   meta = with lib; {
