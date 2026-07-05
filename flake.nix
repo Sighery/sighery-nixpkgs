@@ -37,7 +37,7 @@
 
       nixosModules = {
         goaccess = import ./modules/goaccess.nix;
-        irl-srt-server = import ./modules/irl-srt-server.nix;
+        srtla-relay = import ./modules/srtla-relay.nix;
         syncthing-relay = import ./modules/syncthing-relay.nix;
       };
     };
