@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitHub, gnumake, openirl-srt, zlib, openssl, sqlite, lib, ... }:
+{ stdenv, fetchFromGitHub, gnumake, openirl-srt, zlib, openssl, sqlite, httplib, lib, ... }:
 
 stdenv.mkDerivation {
   pname = "openirl-srt-live-server";
@@ -20,6 +20,7 @@ stdenv.mkDerivation {
     zlib
     openssl
     sqlite
+    httplib
   ];
 
   installPhase = ''
