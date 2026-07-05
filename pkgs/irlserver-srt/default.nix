@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitHub, cmake, openssl, lib, ... }:
+{ stdenv, fetchFromGitHub, cmake, tcl, openssl, lib, ... }:
 
 stdenv.mkDerivation {
   pname = "irlserver-srt";
@@ -13,20 +13,49 @@ stdenv.mkDerivation {
 
   nativeBuildInputs = [
     cmake
+    tcl
   ];
 
   buildInputs = [
     openssl
   ];
 
+  # postPatch = ''
+  #   substituteInPlace scripts/srt.pc.in --replace-fail \
+  #     $\{exec_prefix\}/@CMAKE_INSTALL_LIBDIR@ @CMAKE_INSTALL_FULL_LIBDIR@
+  #   substituteInPlace scripts/srt.pc.in --replace-fail \
+  #     $\{prefix\}/@CMAKE_INSTALL_INCLUDEDIR@ @CMAKE_INSTALL_FULL_INCLUDEDIR@
+  # '';
+
+  # configurePhase = ''
+  #   runHook preConfigure
+
+  #   ./configure
+
+  #   runHook postConfigure
+  # '';
+
+  # postConfigure =
+  configureScript = "./configure";
+
+  # buildPhase = ''
+  #   ./configure
+  # '';
+
+  # https://github.com/nh2/nixpkgs/blob/f7b53c0f6a42aa1aaa23628fd44891ad4102f9df/pkgs/development/libraries/srt/default.nix#L20-L29
   cmakeFlags = [
-    "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
-    "-DENABLE_STDCXX_SYNC=ON"
     "-DCMAKE_INSTALL_INCLUDEDIR=include"
     "-UCMAKE_INSTALL_LIBDIR"
-    "-DENABLE_ENCRYPTION=ON"
-    "-DENABLE_BONDING=ON"
   ];
+
+  # cmakeFlags = [
+  #   "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+  #   "-DENABLE_STDCXX_SYNC=ON"
+  #   "-DCMAKE_INSTALL_INCLUDEDIR=include"
+  #   "-UCMAKE_INSTALL_LIBDIR"
+  #   "-DENABLE_ENCRYPTION=ON"
+  #   "-DENABLE_BONDING=ON"
+  # ];
 
   meta = with lib; {
     homepage = "https://github.com/irlserver/srt";
