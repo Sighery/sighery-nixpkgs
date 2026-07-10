@@ -12,17 +12,16 @@ let
     "--listen=${cfg.listenAddress}:${toString cfg.port}"
     "--provided-by=${escapeShellArg cfg.providedBy}"
   ]
-  ++ optional (cfg.enableStatusSrv == true) "--status-srv=${cfg.statusListenAddress}:${toString cfg.statusPort}"
-  ++ optional (cfg.enableStatusSrv == false) "--status-srv="
+  ++ optional (
+    cfg.statusListenAddress != null || cfg.statusPort != null
+  ) "--status-srv=${toString cfg.statusListenAddress}:${toString cfg.statusPort}"
+  ++ optional (
+    cfg.statusListenAddress == null && cfg.statusPort == null
+  ) "--status-srv="
   ++ optional (cfg.pools != null) "--pools=${escapeShellArg (concatStringsSep "," cfg.pools)}"
   ++ optional (cfg.globalRateBps != null) "--global-rate=${toString cfg.globalRateBps}"
   ++ optional (cfg.perSessionRateBps != null) "--per-session-rate=${toString cfg.perSessionRateBps}"
   ++ cfg.extraOptions;
-
-  strelaysrvWrapper = pkgs.writers.writeBash "strelaysrv-wrapper" ''
-    TOKEN=$(cat "$CREDENTIALS_DIRECTORY/relay_token")
-    ${pkgs.syncthing-relay}/bin/strelaysrv ${concatStringsSep " " relayOptions} --token="$TOKEN"
-  '';
 in
 {
   disabledModules = [ "services/networking/syncthing-relay.nix" ];
@@ -67,29 +66,26 @@ in
     };
 
     statusListenAddress = mkOption {
-      type = types.str;
+      type = types.nullOr types.str;
       default = "";
       example = "1.2.3.4";
       description = ''
         Address to listen on for serving the relay status API.
+
+        Set `statusPort` and `statusListenAddress` to `null` to disable the
+        status API.
       '';
     };
 
     statusPort = mkOption {
-      type = types.port;
+      type = types.nullOr types.port;
       default = 22070;
       description = ''
         Port to listen on for serving the relay status API. This port should be
         added to `networking.firewall.allowedTCPPorts`.
-      '';
-    };
 
-    enableStatusSrv = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Whether the relay status API is enabled. When using a private relay,
-        this might be unnecessary.
+        Set `statusPort` and `statusListenAddress` to `null` to disable the
+        status API.
       '';
     };
 
@@ -102,10 +98,10 @@ in
     };
 
     token = mkOption {
-      type = types.nullOr types.str;
+      type = types.nullOr types.path;
       default = null;
       description = ''
-        Path to the file containing the token.
+        Path to the file containing the token. This allows for private relays.
       '';
     };
 
@@ -155,8 +151,7 @@ in
         StateDirectory = baseNameOf dataDirectory;
 
         LoadCredential =
-          [ ]
-          ++ optional (cfg.token != null) "relay_token:${cfg.token}"
+          optional (cfg.token != null) "token:${cfg.token}"
           ++ optional (cfg.key != null) "key:${cfg.key}"
           ++ optional (cfg.cert != null) "cert:${cfg.cert}";
 
@@ -172,12 +167,13 @@ in
                 install -Dm600 "$CREDENTIALS_DIRECTORY/key" ${dataDirectory}/key.pem
               ''}
             ''}";
-        ExecStart =
-          if cfg.token != null then
-            "${strelaysrvWrapper}"
-          else
-            "${pkgs.syncthing-relay}/bin/strelaysrv ${concatStringsSep " " relayOptions}";
       };
+
+      script = ''
+        ${pkgs.syncthing-relay}/bin/strelaysrv \
+          ${if (cfg.token != null) then "-token=$(cat $CREDENTIALS_DIRECTORY/token)" else ""} \
+          ${concatStringsSep " " relayOptions}
+      '';
     };
   };
 }
