@@ -4,6 +4,7 @@ let
 in
 {
   audio-notification = callPackage ../pkgs/audio-notification { };
+  brightness-notification = callPackage ../pkgs/brightness-notification { };
   ffmpeg-helpers = callPackage ../pkgs/ffmpeg-helpers { };
   hermes = callPackage ../pkgs/hermes { };
   irlserver-irl-srt-server = callPackage ../pkgs/irlserver-irl-srt-server { };

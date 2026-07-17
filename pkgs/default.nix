@@ -4,6 +4,7 @@ let
   callPackage = pkgs.lib.callPackageWith (pkgs // packages);
   packages = {
     audio-notification = callPackage ./audio-notification { };
+    brightness-notification = callPackage ./brightness-notification { };
     ffmpeg-helpers = callPackage ./ffmpeg-helpers { };
     hermes = callPackage ./hermes { };
     irlserver-irl-srt-server = callPackage ./irlserver-irl-srt-server { };
