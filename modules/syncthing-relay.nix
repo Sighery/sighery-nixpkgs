@@ -12,12 +12,10 @@ let
     "--listen=${cfg.listenAddress}:${toString cfg.port}"
     "--provided-by=${escapeShellArg cfg.providedBy}"
   ]
+  ++ optional (cfg.statusListenAddress == null && cfg.statusPort == null) "--status-srv="
   ++ optional (
     cfg.statusListenAddress != null || cfg.statusPort != null
   ) "--status-srv=${toString cfg.statusListenAddress}:${toString cfg.statusPort}"
-  ++ optional (
-    cfg.statusListenAddress == null && cfg.statusPort == null
-  ) "--status-srv="
   ++ optional (cfg.pools != null) "--pools=${escapeShellArg (concatStringsSep "," cfg.pools)}"
   ++ optional (cfg.globalRateBps != null) "--global-rate=${toString cfg.globalRateBps}"
   ++ optional (cfg.perSessionRateBps != null) "--per-session-rate=${toString cfg.perSessionRateBps}"
@@ -47,6 +45,15 @@ in
       '';
     };
 
+    token = mkOption {
+      type = types.nullOr types.path;
+      default = null;
+      description = ''
+        Path to the file containing the token. This can be used to run private
+        relays.
+      '';
+    };
+
     listenAddress = mkOption {
       type = types.str;
       default = "";
@@ -61,7 +68,7 @@ in
       default = 22067;
       description = ''
         Port to listen on for relay traffic. This port should be added to
-        `networking.firewall.allowedTCPPorts`.
+        {option}`networking.firewall.allowedTCPPorts`.
       '';
     };
 
@@ -72,8 +79,8 @@ in
       description = ''
         Address to listen on for serving the relay status API.
 
-        Set `statusPort` and `statusListenAddress` to `null` to disable the
-        status API.
+        Set {option}`statusPort` and {option}`statusListenAddress` to `null`
+        to disable the status API.
       '';
     };
 
@@ -82,10 +89,10 @@ in
       default = 22070;
       description = ''
         Port to listen on for serving the relay status API. This port should be
-        added to `networking.firewall.allowedTCPPorts`.
+        added to {option}`networking.firewall.allowedTCPPorts`.
 
-        Set `statusPort` and `statusListenAddress` to `null` to disable the
-        status API.
+        Set {option}`statusPort` and {option}`statusListenAddress` to `null`
+        to disable the status API.
       '';
     };
 
@@ -94,14 +101,6 @@ in
       default = null;
       description = ''
         Relay pools to join. If null, uses the default global pool.
-      '';
-    };
-
-    token = mkOption {
-      type = types.nullOr types.path;
-      default = null;
-      description = ''
-        Path to the file containing the token. This allows for private relays.
       '';
     };
 
@@ -171,7 +170,7 @@ in
 
       script = ''
         ${pkgs.syncthing-relay}/bin/strelaysrv \
-          ${if (cfg.token != null) then "-token=$(cat $CREDENTIALS_DIRECTORY/token)" else ""} \
+          ${optionalString (cfg.token != null) ''-token="$(cat $CREDENTIALS_DIRECTORY/token)"''} \
           ${concatStringsSep " " relayOptions}
       '';
     };
