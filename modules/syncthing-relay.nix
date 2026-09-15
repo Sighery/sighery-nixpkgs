@@ -13,9 +13,10 @@ let
     "--provided-by=${escapeShellArg cfg.providedBy}"
   ]
   ++ optional (cfg.statusListenAddress == null && cfg.statusPort == null) "--status-srv="
-  ++ optional (
-    cfg.statusListenAddress != null || cfg.statusPort != null
-  ) "--status-srv=${toString cfg.statusListenAddress}:${toString cfg.statusPort}"
+  ++ optional
+    (
+      cfg.statusListenAddress != null || cfg.statusPort != null
+    ) "--status-srv=${toString cfg.statusListenAddress}:${toString cfg.statusPort}"
   ++ optional (cfg.pools != null) "--pools=${escapeShellArg (concatStringsSep "," cfg.pools)}"
   ++ optional (cfg.globalRateBps != null) "--global-rate=${toString cfg.globalRateBps}"
   ++ optional (cfg.perSessionRateBps != null) "--per-session-rate=${toString cfg.perSessionRateBps}"

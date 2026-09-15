@@ -31,11 +31,7 @@
     {
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
 
-      nixosModules = {
-        goaccess = import ./modules/goaccess.nix;
-        srtla-relay = import ./modules/srtla-relay.nix;
-        syncthing-relay = import ./modules/syncthing-relay.nix;
-      };
+      nixosModules = import ./modules;
 
       packages = forAllSystems packagesFor;
 
