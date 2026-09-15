@@ -12,13 +12,12 @@
       packagesOverlay = final: prev:
         import ./pkgs final;
 
-      spotifyOverride = import ./overrides/spotify.nix;
-      fantasqueOverride = import ./overrides/fantasque-sans-mono.nix;
+      overrides = import ./overrides { inherit (nixpkgs) lib; };
 
-      overlay = final: prev:
-        (packagesOverlay final prev)
-        // (spotifyOverride final prev)
-        // (fantasqueOverride final prev);
+      overlay = nixpkgs.lib.composeManyExtensions [
+        packagesOverlay
+        overrides
+      ];
 
       packagesFor = system:
         let
